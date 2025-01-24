@@ -20,7 +20,7 @@ if __name__ == '__main__':
 
         print("Requesting '"+page_html+"' from the server...")
 
-        http_response = send_request_to_server('/'+page_html)
+        http_response = send_request_to_server(page_html)
         print(http_response)
     else:
         print("Unknown mode. Use 'server' or 'client'.")

@@ -1,7 +1,7 @@
 import socket
 import os
 
-SERVER_HOST = '127.0.0.1'
+SERVER_HOST = "127.0.0.1"
 SERVER_PORT = 8080
 
 def send_request_to_server(page):
@@ -30,8 +30,12 @@ def send_request_to_server(page):
     else:
         body =""
 
-    print("En-tête HTTP:\n")
+    print("\nEn-tête HTTP:")
     print(headers)
 
+    # Save the body to a file in the folder client/output
+    with open("client/output/response.html", "w") as file:
+        file.write(body)
+    
     client_socket.close()
-    return body
+    return "Corps HTTP:\r\n" + body
