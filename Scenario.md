@@ -2,7 +2,10 @@
 
 Ce document illustre un exemple complet d'exécution pour chaque partie du projet : le serveur et le client.
 
-Le serveur et le client interagissent entre eux.
+Le client peut fonctionner de manière indépendante. 
+Si le client souhaite envoyer une requête au serveur local, celui-ci doit d'abord être démarré en suivant les étapes appropriées. 
+Toutefois, le client peut également être exécuté indépendamment pour communiquer avec un serveur distant, comme www.google.ca ou www.amazon.ca.
+
 ---
 
 ## **1. Serveur**
@@ -11,7 +14,7 @@ Le serveur et le client interagissent entre eux.
 1. **Démarrage du serveur** :  
    Exécutez la commande suivante dans le terminal pour démarrer le serveur :
    ```bash
-   python main.py server
+   python3 main.py server
    ```
 2. **Résultat attendu** :
     Une fois le serveur démarré, il écoute les connexions sur l'adresse 127.0.0.1 et le port 8080. Le message suivant est affiché dans la console :
@@ -33,39 +36,48 @@ Le serveur et le client interagissent entre eux.
 1. **Démarrer le client** :  
    Exécutez la commande suivante dans le terminal pour démarrer le client HTTP :
    ```bash
-   python main.py client
+   python3 main.py client
    ```
-2. **Résultat attendu** :
-    Une fois le client démarré, il demandera de saisir la page web que l'on souhaite consulté :
+2. **Saisie serveur** :
+    Une fois le client démarré, il vous demande à quel serveur vous souhaitez vous connecter :
     ```bash
-    Enter the page you want to request:
+    What server do you want to connect ?
     ```
 
 3. **Saisie Page Web** :
-    Le client peut renseigné la page qu'il souhaite, dans notre exemple on choisi "index.html":
+    Le client demande ensuite la page que vous souhaitez joindre:
     ```bash
     Enter the page you want to request:
-    index.html
+    ```
+
+3. **Exemple de demande de saisie**:
+    Comme exemple on peut obtenir ce résultat : 
+    ```bash
+    What server do you want to connect ? www.google.ca
+    Enter the page you want to request : index.html
     ```
 
 4. **Réponse** :
-    Une fois la requête envoyée, le client reçoit la réponse du serveur :
+    Une fois la requête envoyée, le client reçoit la réponse du serveur. Pour des raisons de simplicité nous présentons ici un exemple avec le serveur local HTTP que nous avons développé : 
     ```bash
-    Requesting '/index.html' from the server...
+    What server do you want to connect ? localhost
+    Enter the page you want to request : index.html
+    Requesting the page from 127.0.0.1:8080/index.html ...
 
     En-tête HTTP:
     HTTP/1.1 200 OK
-    Date: Thu, 23 Jan 2025 23:09:59 GMT
+    Date: Wed, 29 Jan 2025 13:14:06 GMT
     Content-Type: text/html
-    Last-Modified: Wed, 22 Jan 2025 11:16:58 GMT
-    Content-Length: 107
+    Last-Modified: Wed, 29 Jan 2025 12:39:44 GMT
+    Content-Length: 110
+
 
 
     Corps HTTP:
     <html>
     <head><title>Index Page</title></head>
     <body>
-        <h1>Welcome to the Home Page</h1>
+        <h1>This is the index page html</h1>
     </body>
     </html>
     ```
@@ -77,7 +89,7 @@ Le serveur et le client interagissent entre eux.
 5. **Cas où le fichier n'existe pas** :
     Si le client renseigne une page web qui n'existe pas sur le serveur comme par exemple */nonexistant*, le serveur renvoie cette réponse : 
     ```bash
-    Requesting '/nonexistant' from the server...
+    Requesting the page from 127.0.0.1:8080/nonexistant ...
 
     En-tête HTTP:
     HTTP/1.1 404 NOT FOUND

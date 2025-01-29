@@ -1,41 +1,67 @@
 import socket
-import os
+import ssl
 
-SERVER_HOST = "127.0.0.1"
-SERVER_PORT = 8080
+def send_request(host, port, path='/'):
+    try: 
+        if port == 443:
+            context = ssl.create_default_context()
+            client_socket = context.wrap_socket(socket.socket(socket.AF_INET, socket.SOCK_STREAM), server_hostname=host)
+            client_socket.connect((host, port))
+        else:
+            client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            client_socket.connect((host, port))
 
-def send_request_to_server(page):
-    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client_socket.connect((SERVER_HOST, SERVER_PORT))
+        request = f"GET {path} HTTP/1.1\r\nHost: {host}\r\nConnection: close\r\n\r\n"
+        client_socket.sendall(request.encode())
 
-    request = f"GET {page} HTTP/1.1\nHost: {SERVER_HOST}\n\n"
-    client_socket.sendall(request.encode())
+        response = b""
+        while True:
+            part = client_socket.recv(4096)
+            if not part:
+                break
+            response += part
 
-    # Handle response from server
-    response = b""
-    # Keep receiving data until no more data is received
-    while True:
-        part = client_socket.recv(1024)
-        if not part:
-            break
-        response += part
+        client_socket.close()
 
+        response_parts = response.decode(errors="ignore").split("\r\n\r\n", 1)
+        headers = response_parts[0]
+        body = response_parts[1] if len(response_parts) > 1 else ""
 
-    # Print response from server
-    response_split = response.decode().split("\r\n\r\n", 1)
-    headers = response_split[0]
+        print("\nEn-tête HTTP:")
+        print(headers)
 
-    if len(response_split) > 1:
-        body = response_split[1]
-    else:
-        body =""
-
-    print("\nEn-tête HTTP:")
-    print(headers)
-
-    # Save the body to a file in the folder client/output
-    with open("client/output/response.html", "w") as file:
-        file.write(body)
+        with open("client/output/response.html", "w") as file:
+            file.write(body)
+        
+        return ("\nCorps HTTP:\n" + body)
     
-    client_socket.close()
-    return "Corps HTTP:\r\n" + body
+    except socket.gaierror:
+        print(f"Error: The server '{host}' does not exist.")
+    except socket.timeout:
+        print(f"Error: Connection to '{host}' timed out.")
+    except ConnectionRefusedError:
+        print(f"Error: Connection refused by the server '{host}'.")
+    except Exception as e:
+        print(f"Error: {e}")
+
+    return ""
+
+def asking_for_request():
+    choice = input("What server do you want to connect ? ")
+
+    if choice == '127.0.0.1' or choice == 'localhost':
+        host = '127.0.0.1'
+        port = 8080
+    else:        
+        host = choice
+        port = 443  # Default HTTPS port
+
+    path = input("Enter the page you want to request : ").strip()
+    
+    if path[0] != '/':
+            path = '/' + path
+
+    print(f"Requesting the page from {host}:{port}{path} ...")
+    html = send_request(host, port, path)
+    
+    print(html)
