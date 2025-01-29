@@ -32,6 +32,8 @@ Toutefois, le client peut également être exécuté indépendamment pour commun
 
 ## **2. Client**
 
+**Remarque** : Pour effectuer une requête vers le serveur local, il est essentiel que celui-ci soit lancé au préalable.
+
 ### Étapes :
 1. **Démarrer le client** :  
    Exécutez la commande suivante dans le terminal pour démarrer le client HTTP :
