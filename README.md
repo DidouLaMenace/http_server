@@ -39,3 +39,7 @@ python3 main.py client
 ## Scénario
 
 Un scénario d'utilisation est disponible [ici](Scenario.md).
+
+## Présentation
+
+Une vidéo est disponible [ici](https://youtu.be/GyKE8QV_5OY) pour montrer le fonctionnement du server et du client HTTP.
